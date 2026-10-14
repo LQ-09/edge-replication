@@ -1,0 +1,8 @@
+{
+  "source_archive": "dataverse_files.zip",
+  "archive_sha256": "4728ff0a8129d7a46f2e95e1275730a3db42dca5e34f28044d6baab663d7f2c8",
+  "bidask_commit": "2dbafe0087e609c7b153e1a43b7ce6c923daf89c",
+  "run_date": "2026-10-14",
+  "independently_verified_reference_cells": 240,
+  "scope": "Table 2A and Table 2B simulation only"
+}

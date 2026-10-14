@@ -1,0 +1,6 @@
+.r-env/
+.Rhistory
+.RData
+.DS_Store
+.env
+.env.*

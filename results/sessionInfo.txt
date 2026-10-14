@@ -1,0 +1,16 @@
+R version 4.2.3 (2023-03-15)
+Platform: aarch64-apple-darwin20.0.0 (64-bit)
+Running under: macOS 26.5.1
+
+Matrix products: default
+BLAS/LAPACK: /Users/qiling/Documents/Codex/2026-10-14/codex-threads-01a13b59-8b88-71ea-ae9f-2/work/r-env/lib/libopenblas.0.dylib
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] zoo_1.8-12     compiler_4.2.3 tools_4.2.3    xts_0.13.1     grid_4.2.3    
+[6] bidask_2.0.0   lattice_0.22-6

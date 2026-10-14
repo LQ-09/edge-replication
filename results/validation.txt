@@ -1,0 +1,4 @@
+Matching cells at the supplied reference precision: 240 / 240
+Elapsed seconds: 74.3
+Reference: user-provided archive output/tab_2A.tex and output/tab_2B.tex.
+No pseudo empirical input data were used.
