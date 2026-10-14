@@ -1,88 +1,23 @@
-# README
+# 作者原始项目与参考表
 
-This folder contains the code to replicate all results in the paper and the [cascad](https://www.cascad.tech/certification/145-efficient-estimation-of-bid-ask-spreads-from-open-high-low-and-close-prices/) reproducibility certificate. Additional code and data are available at https://github.com/eguidotti/bidask
+`original/` 保存用户提供的 `dataverse_files.zip` 完整内容，保持作者文件原样。这里顶层的 `tab_2A.tex`、`tab_2B.tex`、`script_836294.R` 是供本仓库模拟验证使用的副本。
 
-## Data Availability
+此前这里只放了部分文件，却沿用完整项目的说明，导致按 `renv::restore()` / `main.R` 操作时缺少脚本及环境启动文件。现在完整目录已补齐。
 
-The paper is based on the following data sources:
+## 两个入口分别恢复
 
-1. CRSP U.S. Stock Database (flat files for R)
-2. NYSE Monthly and Daily TAQ (via WRDS)
-3. Binance Historical Market Data (free access)
+只复现已验证的 Table 2，请在仓库根目录按根 [README](../README.md) 运行。无需恢复作者的全部 75 个包。
 
-The data cannot be redistributed.
+运行作者完整项目时，进入 `reference/original/` 恢复其独立环境。`main.R` 使用相对路径，不要在仓库根目录运行它。已有 R 4.2.3 和编译工具时按下面步骤操作。本次 Apple Silicon + Conda 验证还需要[两项兼容配置](../docs/dependencies.md)，相关错误的处理已记录。
 
-## Dataset List
-
-The folder `input/` includes pseudo datasets. The pseudo datasets have the same structure as the original datasets used for the paper but they have a reduced number of entries and are filled with random values.
-
-| File          | Location | Provided | Note        |
-| ------------- | -------- | -------- | ----------- |
-| `stocks.csv`  | `input/` | TRUE     | Pseudo data |
-| `cryptos.csv` | `input/` | TRUE     | Pseudo data |
-
-To overwrite the pseudo data with the actual data, follow the instructions:
-
-1. in the folder `data/source/crsp/202112/` to generate the files `frachl.csv.gz` and `spread.csv.gz`
-2. in the folder `data/source/crsptaq/202112/` to generate the file `ctm_mth.csv.gz`
-3. in the folder `data/source/binance/202302/` to generate the file `bmd_mth.csv.gz`
-
-Then, run the script `stocks.R` to generate the actual data file `input/stocks.csv`:
-
-```
-Rscript stocks.R
-```
-
-and the script `cryptos.R` to generate the actual data file `input/cryptos.csv`.
-
-```
-Rscript cryptos.R
-```
-
-## Computational Requirements
-
-All results were generated using R 4.2.3 on a MacBook Air (M1, 2020). 
-
-## Instructions to Replicators
-
-Install all dependencies with [renv](https://rstudio.github.io/renv/index.html):
-
-```R
-renv::restore()
-```
-
-Run the main script to generate all results in the paper:
-
-```R
+```sh
+cd reference/original
+Rscript -e 'renv::restore(prompt = FALSE)'
+Rscript -e 'library(eguidotti); library(magrittr); library(ggplot2); invisible(lapply(list.files("scripts", full.names = TRUE), source)); stopifnot(file.exists("input/stocks.csv"), file.exists("input/cryptos.csv")); cat("Original entry dependencies loaded\n")'
+# 下面默认使用原包的随机占位数据；真实实证须先替换为授权真实数据。
 Rscript main.R
 ```
 
-The expected runtime is 10-20 minutes. The script generates an `output/` folder with all figures and tables.
+`eguidotti` 是作者 GitHub `eguidotti/r` 上的包；`magrittr`、`ggplot2` 等来自 CRAN。`original/renv.lock` 记录了版本与源码位置；restore 安装它们，不需要同名文件放在 main.R 旁边。restore 不会补出缺失的 `scripts/` 或研究数据，这些必须随源项目提供。
 
-## List of Tables and Programs
-
-| Figure/Table           | Program  | Line number | Output file        | Dataset used  |
-| ---------------------- | -------- | ----------- | ------------------ | ------------- |
-| Figure 1               | `main.R` | 194         | `fig_1.pdf`        | `stocks.csv`  |
-| Figure 2               | `main.R` | 162         | `fig_2.pdf`        |               |
-| Figure 3               | `main.R` | 176         | `fig_3.pdf`        |               |
-| Figure 4               | `main.R` | 228         | `fig_4.pdf`        | `stocks.csv`  |
-| Figure 5               | `main.R` | 236         | `fig_5.pdf`        | `stocks.csv`  |
-| Figure 6               | `main.R` | 307         | `fig_6.pdf`        | `stocks.csv`  |
-| Figure 7               | `main.R` | 314         | `fig_7.pdf`        | `stocks.csv`  |
-| Figure 8               | `main.R` | 321         | `fig_8.pdf`        | `cryptos.csv` |
-| Table 2 / Panel A      | `main.R` | 134         | `tab_2A.tex`       |               |
-| Table 2 / Panel B      | `main.R` | 148         | `tab_2B.tex`       |               |
-| Table 3                | `main.R` | 200         | `tab_3.tex`        | `stocks.csv`  |
-| Table 4 / Panels A-E   | `main.R` | 244         | `tab_4(A-E).tex`   | `stocks.csv`  |
-| Section 6.2 - Text     | `main.R` | 207         | `sec_6.2.tex`      | `stocks.csv`  |
-| **Internet Appendix**  |          |             |                    |               |
-| Figure I.2             | `main.R` | 221         | `fig_I.2.pdf`      | `stocks.csv`  |
-| Figure I.3             | `main.R` | 328         | `fig_I.3.pdf`      | `stocks.csv`  |
-| Table I.2              | `main.R` | 214         | `tab_I.2.tex`      | `stocks.csv`  |
-| Table I.4 / Panels A-E | `main.R` | 253         | `tab_I.4(A-E).tex` | `stocks.csv`  |
-| Table I.5 / Panels A-E | `main.R` | 262         | `tab_I.5(A-E).tex` | `stocks.csv`  |
-| Table I.6 / Panels A-E | `main.R` | 271         | `tab_I.6(A-E).tex` | `stocks.csv`  |
-| Table I.7 / Panels A-E | `main.R` | 280         | `tab_I.7(A-E).tex` | `stocks.csv`  |
-| Table I.8 / Panels A-E | `main.R` | 298         | `tab_I.8(A-E).tex` | `stocks.csv`  |
-| Table I.9 / Panels A-E | `main.R` | 289         | `tab_I.9(A-E).tex` | `stocks.csv`  |
+**原包的两个 input CSV 是随机占位数据，不是论文真实数据。** 可以用于检查流程，不能据此声称重现真实市场结论。获取及生成真实输入的方法见 [作者 README](original/README.md)。未加入任何本地凭据或 WRDS 授权提取数据。

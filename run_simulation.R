@@ -8,10 +8,6 @@ stopifnot(getRversion() == "4.2.3",
 args <- commandArgs(trailingOnly = FALSE)
 script <- sub("^--file=", "", args[grepl("^--file=", args)])
 setwd(dirname(normalizePath(script)))
-dir.create("results", showWarnings = FALSE)
-writeLines(capture.output(sessionInfo()), "results/sessionInfo.txt")
-write.csv(installed.packages()[c("bidask", "xts", "zoo"), c("Package", "Version")],
-          "results/package_versions.csv", row.names = FALSE)
 RNGkind("Mersenne-Twister", "Inversion", "Rejection")
 methods <- c("EDGE", "OHLC", "CHLO", "OHL", "CHL", "AR", "CS", "ROLL")
 spreads <- c(0.005, 0.01, 0.03, 0.05, 0.08)
@@ -33,6 +29,12 @@ stopifnot(isTRUE(all.equal(as.numeric(test_s), scalar, tolerance = 1e-10)))
 stopifnot(isTRUE(all.equal(abs(as.numeric(test_s)),
   as.numeric(bidask::spread(test_x, width = seq(0, 210, 21))), tolerance = 1e-10)))
 cat("Self-check passed: scalar/vectorized EDGE and signed/absolute conventions.\n")
+if ("--check-only" %in% commandArgs(trailingOnly = TRUE)) quit(status = 0)
+
+dir.create("results", showWarnings = FALSE)
+writeLines(capture.output(sessionInfo()), "results/sessionInfo.txt")
+write.csv(installed.packages()[c("bidask", "xts", "zoo"), c("Package", "Version")],
+          "results/package_versions.csv", row.names = FALSE)
 
 all_results <- list()
 started <- Sys.time()

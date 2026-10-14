@@ -2,6 +2,17 @@
 
 复现日期：2026-10-14。对象为 Ardia, Guidotti & Kroencke (2024), *Efficient Estimation of Bid-Ask Spreads from Open, High, Low, and Close Prices*, Journal of Financial Economics 161, 103916。
 
+## 运行入口与依赖
+
+本仓库有两个独立的 R 项目，**在所选项目的目录运行 `renv::restore()`**。`renv` 是 R 包环境管理工具；`library(...)` 加载安装后的 R 包，并不寻找同名本地 `.R` 文件。
+
+| 目的 | 工作目录 | 入口 | 依赖配置 |
+|---|---|---|---|
+| 重现已验证的 Table 2A/2B | 仓库根目录 | `run_simulation.R` | 根 `renv.lock`，5 个包（含 renv 和间接依赖 lattice） |
+| 检查或运行作者完整原始项目 | `reference/original/` | `main.R` | 作者 `renv.lock`，75 个包 |
+
+完整作者项目包含原包目录、16 个分析脚本、renv 启动文件及随机占位输入。`main.R` 会同时运行模拟和基于输入文件的分析；占位数据的输出不能称为真实市场实证。
+
 ## 本次范围
 
 执行作者 Table 2 的完整两组模拟：频繁交易（A）与稀疏交易（B），每组包含 0.5%、1%、3%、5%、8% 五种真实价差，使用 EDGE、OHLC、CHLO、OHL、CHL、AR、CS、ROLL 八种方法。每个场景模拟 10,000 个连续的 21 日窗口，合计 100,000 个窗口、800,000 个估计值。
@@ -31,24 +42,32 @@
 | `results/reference_comparison.csv` | 240 个对照单元格：均值、标准差、零值比例 |
 | `results/draws_*.rds` | 10 个场景各 10,000 × 8 的归零后估计矩阵 |
 | `results/validation.txt` | 对照通过数与运行耗时 |
-| `results/sessionInfo.txt`、`package_versions.csv` | 实际计算环境 |
+| `results/sessionInfo.txt`、`results/package_versions.csv` | 实际计算环境 |
 | `run.log` | 本次运行日志 |
-| `reference/` | 作者原始主程序、模拟脚本、说明、锁文件及参考表 |
+| `reference/original/` | 完整作者原包，含 main.R、全部 scripts、renv 配置和随机占位输入 |
+| `reference/tab_2A.tex`、`tab_2B.tex` | 模拟验证使用的作者参考表 |
+| `.Rprofile`、`renv/`、`renv.lock` | Table 2 入口的自动加载与依赖恢复配置 |
 | `SHA256SUMS.txt` | 文件校验值 |
 
 ## 重新运行
 
-在这个文件夹打开终端。下面使用 conda 创建独立环境，随后从随包源码安装锁定版本；首次配置需要网络。
+先安装 Git、Conda/Miniforge，然后执行下面的命令。已有 R 4.2.3 和编译工具时，可省略创建/激活 Conda 环境两行。
 
 ```sh
-conda create -y -p ./.r-env -c conda-forge r-base=4.2.3 r-zoo=1.8_12 r-xts
+git clone https://github.com/LQ-09/edge-replication.git
+cd edge-replication
+conda create -y -p ./.r-env -c conda-forge r-base=4.2.3
 conda activate ./.r-env
-R CMD INSTALL vendor/xts_0.13.1.tar.gz
-R CMD INSTALL vendor/bidask
-Rscript --vanilla run_simulation.R > run.log 2>&1
+Rscript -e 'renv::restore(prompt = FALSE)'
+Rscript run_simulation.R --check-only
+Rscript run_simulation.R > run.log 2>&1
 ```
 
-现有 Mac arm64 环境还可以通过 `conda-osx-arm64-explicit.txt` 重建，再执行上面的两条 `R CMD INSTALL`。该清单记录 conda 管理的 xts 0.14.0；本次实际执行前已用源代码安装覆盖为 0.13.1，故覆盖步骤必不可少，入口也会检查实际版本。其他平台优先使用上述按版本创建环境的方法。
+`.Rprofile` 从随仓库提供的 `renv/activate.R` 启动 renv 1.0.0；首次恢复需要网络，自动安装锁定版本的 lattice、zoo、xts 与作者 GitHub 提交对应的 bidask。编译源码包需要编译器；上述 Conda 的 R 环境提供相应工具链。不要在这条流程中添加 `--vanilla`，否则会跳过项目环境的自动加载。
+
+`--check-only` 验证版本及小样本计算，不重跑完整模拟，也不改动已保存结果。完整运行会更新 `results/` 和运行日志。`vendor/` 保存源码供追溯，通常无需手动安装。`conda-osx-arm64-explicit.txt` 是首次运行的历史环境记录，不是当前推荐的恢复入口。
+
+作者完整入口的独立恢复方法见 [reference/README.md](reference/README.md)。本次修复原因、验证范围和工具链说明见 [依赖检查记录](docs/dependencies.md)。依赖恢复不包含下载授权市场数据。
 
 模拟会使用较多内存：一次生成 8,190 万个潜在成交观察。运行按场景串行执行并回收内存；不会下载任何 WRDS 数据。
 
