@@ -1,6 +1,25 @@
-# EDGE 模拟复现：Table 2A / 2B
+# EDGE 项目：模拟复现、真实数据验证与日内扩展
 
-复现日期：2026-10-14。对象为 Ardia, Guidotti & Kroencke (2024), *Efficient Estimation of Bid-Ask Spreads from Open, High, Low, and Close Prices*, Journal of Financial Economics 161, 103916。
+模拟复现：2026-10-14；真实数据分析：2026-10-15。对象为 Ardia, Guidotti & Kroencke (2024), *Efficient Estimation of Bid-Ask Spreads from Open, High, Low, and Close Prices*, Journal of Financial Economics 161, 103916。
+
+## 当前完成情况
+
+- **模拟**：Table 2A/2B 全部运行；240 项作者参考表核对通过，正式出版表另核对 160 项均值/标准差，全部达到原表展示精度。
+- **真实月度实证**：5 只股票、2024 年上半年、620 个股票日、30 个匹配股票月。相关系数 0.0304，RMSE 37.983 bps；结果偏弱，如实保留。
+- **日内扩展**：15 个交易日、45 个候选时段，44 个通过质量门槛。一个苹果午间对照时段因报价匹配率低于 90% 被排除。
+- **交付文件**：[PDF 报告](docs/EDGE_Project_Report.pdf)、[12 页演示稿](docs/EDGE_Midterm_Presentation.pptx)、[约 20 分钟讲稿](docs/presentation_notes.md)。录制与 Canvas 提交仍需本人完成。
+- **报告与复现说明**：[最终报告](REPORT.md)、[方法与局限](docs/methodology.md)、[数据字典](docs/data_dictionary.md)、[真实数据复跑步骤](docs/reproduce_empirical.md)。
+
+公开仓库不含 WRDS 授权原始数据或逐笔/个股实证输出。**克隆并安装依赖后可重跑模拟；重跑真实实证还需要有权限的 WRDS 数据。**本项目没有使用作者随机占位 CSV 冒充真实数据。
+
+Python 部分使用 3.12，直接依赖见 `requirements.txt`，完整锁定版本见 `requirements-lock.txt`。执行：
+
+```sh
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-lock.txt
+python -m unittest discover -s tests -v
+```
 
 ## 运行入口与依赖
 
@@ -17,9 +36,9 @@
 
 执行作者 Table 2 的完整两组模拟：频繁交易（A）与稀疏交易（B），每组包含 0.5%、1%、3%、5%、8% 五种真实价差，使用 EDGE、OHLC、CHLO、OHL、CHL、AR、CS、ROLL 八种方法。每个场景模拟 10,000 个连续的 21 日窗口，合计 100,000 个窗口、800,000 个估计值。
 
-对照来源是用户提供的 `dataverse_files.zip` 内作者保存的 `output/tab_2A.tex` 和 `output/tab_2B.tex`，已原样保存在 `reference/`。这是对作者复现包所附表格的核对，未另外逐页核对出版商论文 PDF。
+对照来源是用户提供的 `dataverse_files.zip` 内作者保存的 `output/tab_2A.tex` 和 `output/tab_2B.tex`，已原样保存在 `reference/`。另已核对正式出版 PDF 第 8 页 Table 2 的 160 项均值/标准差，全部一致；零值比例只出现在作者附表。
 
-压缩包 README 明确指出 `input/stocks.csv` 和 `input/cryptos.csv` 是随机生成的占位数据。本次模拟不需要、也未读取这些文件；尚未完成 CRSP/TAQ 真实市场实证、财报事件或日内扩展。
+压缩包 README 明确指出 `input/stocks.csv` 和 `input/cryptos.csv` 是随机生成的占位数据。本次模拟不需要、也未读取这些文件。真实实证和财报邻近日内扩展已使用另行下载的 WRDS 数据完成，见 REPORT.md。
 
 ## 方法与复现细节
 

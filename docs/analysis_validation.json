@@ -1,0 +1,11 @@
+{
+  "status": "share_with_caveats",
+  "monthly_benchmarks_independently_recomputed": 30,
+  "interval_RMS_independently_recomputed": 44,
+  "raw_quote_match_spot_checks": 100,
+  "all_matched_quotes_strictly_preceding": true,
+  "all_matched_quotes_within_five_seconds": true,
+  "all_45_intervals_have_30_bars": true,
+  "excluded_intervals": 1,
+  "scope": "Spot-check raw matching on one stock-day; all saved benchmark formulas checked. No causal or population validation."
+}

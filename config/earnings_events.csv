@@ -1,0 +1,6 @@
+event_id,permno,announcement_date,release_timing,source,verified
+MSFT_20240130,10107,2024-01-30,unknown,https://www.microsoft.com/en-us/Investor/earnings/FY-2024-Q2/press-release-webcast,True
+AAPL_20240201,14593,2024-02-01,unknown,https://www.apple.com/newsroom/2024/02/apple-reports-first-quarter-results/,True
+XOM_20240202,11850,2024-02-02,unknown,https://corporate.exxonmobil.com/news/news-releases/2024/0202_exxonmobil-announces-2023-results,True
+JPM_20240112,47896,2024-01-12,unknown,https://www.jpmorganchase.com/ir/events,True
+NVDA_20240221,86580,2024-02-21,unknown,https://investor.nvidia.com/news/press-release-details/2024/NVIDIA-Announces-Financial-Results-for-Fourth-Quarter-and-Fiscal-2024/,True

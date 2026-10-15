@@ -5,3 +5,9 @@
 .env
 .env.*
 .dependency-build/
+.venv/
+__pycache__/
+*.pyc
+data/
+private_outputs/
+config/local*.yaml

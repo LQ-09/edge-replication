@@ -1,0 +1,57 @@
+# Copy to config/local.yaml; all paths are relative to the repository root.
+# Only mark metadata verified after checking your actual extract and documentation.
+start: '2024-01-01'
+end: '2024-06-30'
+output_dir: private_outputs
+inputs:
+  crsp: data/raw/crsp.csv
+  iid: data/raw/iid.csv
+  trades: data/raw/trades.parquet
+  quotes: data/raw/quotes.parquet
+  events: data/raw/earnings_events.csv
+  manifest: data/raw/sample_manifest.csv
+crsp:
+  metadata_verified: false
+  security_rule: null
+  adjustment_convention: null
+  source: null
+  # Canonical input common_stock must be a verified point-in-time eligibility flag.
+  columns: {permno: permno, date: date, open: open, high: high, low: low, close: close, volume: volume, common_stock: common_stock}
+  min_days: 15
+  min_coverage: 0.7
+  require_all_sessions: true
+  negative_estimates: truncate_zero
+  units: raw_price
+iid:
+  metadata_verified: false
+  field_definition: null
+  source: null
+  identifier_mapping: null
+  units: null # decimal, percent, or bps; must verify, never infer from magnitude
+  columns: {permno: permno, date: date, spread: null}
+  winsor_quantile: 0.995
+  winsor_scope: available_sample_by_month
+  min_days: 15
+  min_overlap_fraction: 0.8
+taq:
+  metadata_verified: false
+  source: null
+  nbbo_definition: null
+  identifier_mapping: null
+  condition_rule_source: null
+  # Export complete condition/correction codes as strings; select valid exact codes.
+  trade_conditions: []
+  trade_corrections: []
+  quote_conditions: []
+  max_quote_age_seconds: 5
+  allow_exact_quote_match: false
+  min_trades_per_bar: 2
+  min_bars: 20
+  min_quote_match_fraction: 0.9
+  min_bar_trade_fraction: 0.9
+  # Timezone-aware timestamps required; no implicit timezone localization.
+  windows: {open: ['09:30', '10:00'], midday: ['12:00', '12:30'], close: ['15:30', '16:00']}
+events:
+  max_control_distance_sessions: 10
+  control_event_buffer_sessions: 2
+  calendar_completeness_verified: false

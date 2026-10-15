@@ -1,0 +1,92 @@
+start: '2024-01-01'
+end: '2024-06-30'
+output_dir: private_outputs
+inputs:
+  crsp: data/prepared/crsp.csv
+  iid: data/prepared/iid.csv
+  trades: data/prepared_taq/trades.parquet
+  quotes: data/prepared_taq/quotes.parquet
+  events: config/earnings_events.csv
+  manifest: sample_manifest.csv
+crsp:
+  metadata_verified: true
+  security_rule: CRSP CIZ EQTY/COM/NS, USIncFlg Y, IssuerType CORP, TradingStatusFlg
+    A, point-in-time daily headers
+  adjustment_convention: DlyOpen/High/Low/Close divided by DlyCumFacPr; raw share
+    volume and unadjusted dollar volume retained. WRDS CIZ cumulative adjustment factors
+    article; NVDA 2024-06-07 factor 10 and 2024-06-10 factor 1 verified.
+  source: WRDS CRSP Annual Stock Version 2 Daily Stock File, downloaded 2026-10-15
+  columns:
+    permno: permno
+    date: date
+    open: open
+    high: high
+    low: low
+    close: close
+    volume: volume
+    common_stock: common_stock
+  min_days: 15
+  min_coverage: 0.7
+  require_all_sessions: true
+  negative_estimates: truncate_zero
+  units: raw_price
+iid:
+  metadata_verified: true
+  field_definition: 'WRDS DTAQ IID Manual 2.0 pp12,24-25 Formula 4: simple trade-average
+    2 D(P-M)/M; no factor 100'
+  source: WRDS Millisecond Intraday Indicators, downloaded 2026-10-15
+  identifier_mapping: Blank SYM_SUFFIX only; SYM_ROOT matched one-to-one to CRSP TradingSymbol
+    on date for five US common shares
+  units: decimal
+  columns:
+    permno: permno
+    date: date
+    spread: spread
+  winsor_quantile: 0.995
+  winsor_scope: available_sample_by_month
+  min_days: 15
+  min_overlap_fraction: 0.8
+taq:
+  metadata_verified: true
+  source: WRDS raw TAQ ctm_YYYYMMDD and complete_nbbo_YYYYMMDD, accessed 2026-10-15;
+    cached exports with SAS log
+  nbbo_definition: WRDS Complete NBBO (IID manual p5), BEST_BID/BEST_ASK; exact source
+    TIME_M displayed TIME20.9; timestamp ties retained as invalid barriers, source_row
+    is not exchange sequence
+  identifier_mapping: Blank suffix, CRSP TradingSymbol+date mapping verified one-to-one
+  condition_rule_source: NYSE Daily TAQ Client Specification v4.0 (2022-11-02), raw
+    regular trades with optional F (intermarket sweep), I (odd-lot); correction 00;
+    regular two-sided R quotes only
+  trade_conditions:
+  - '@'
+  - '@F'
+  - '@I'
+  - '@FI'
+  - ''
+  - F
+  - I
+  - FI
+  trade_corrections:
+  - '00'
+  quote_conditions:
+  - R
+  max_quote_age_seconds: 5
+  allow_exact_quote_match: false
+  min_trades_per_bar: 2
+  min_bars: 20
+  min_quote_match_fraction: 0.9
+  min_bar_trade_fraction: 0.9
+  windows:
+    open:
+    - 09:30
+    - '10:00'
+    midday:
+    - '12:00'
+    - '12:30'
+    close:
+    - '15:30'
+    - '16:00'
+events:
+  max_control_distance_sessions: 10
+  control_event_buffer_sessions: 2
+  calendar_completeness_verified: true

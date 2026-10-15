@@ -4,5 +4,11 @@
   "bidask_commit": "2dbafe0087e609c7b153e1a43b7ce6c923daf89c",
   "run_date": "2026-10-14",
   "independently_verified_reference_cells": 240,
-  "scope": "Table 2A and Table 2B simulation only"
+  "scope": "Table 2A/B simulation; five-stock 2024 H1 daily pilot; 15 stock-day intraday extension",
+  "empirical_run_date": "2026-10-15",
+  "published_paper_cells_verified": 160,
+  "matched_stock_months": 30,
+  "accepted_intraday_intervals": 44,
+  "candidate_intraday_intervals": 45,
+  "licensed_data_included": false
 }

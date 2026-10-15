@@ -1,0 +1,7 @@
+{
+  "cases": 7,
+  "max_absolute_signed_difference": 3.3306690738754696e-16,
+  "includes_positive_and_negative": true,
+  "tolerance": 1e-12,
+  "note": "Synthetic unit fixtures, not additional economic simulation results; unchanged pinned author R and Python EDGE implementations."
+}
