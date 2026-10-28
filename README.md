@@ -1,5 +1,7 @@
 # EDGE Spread Estimation — Replication and Empirical Validation
 
+Maintained by [Ling Qi](https://github.com/LQ-09).
+
 A reproducible R/Python study of the EDGE bid–ask spread estimator in Ardia, Guidotti & Kroencke (2024).
 
 ## Start here
