@@ -1,3 +1,35 @@
+# EDGE Spread Estimation — Replication and Empirical Validation
+
+A reproducible R/Python study of the EDGE bid–ask spread estimator in Ardia, Guidotti & Kroencke (2024).
+
+## Start here
+
+- **Simulation:** reproduces Table 2A/2B with pinned author code, fixed seeds, and saved comparison outputs.
+- **Validation:** the stored results report 240/240 matches to the author reference tables and 160/160 mean/standard-deviation matches to the published table at displayed precision.
+- **Empirical study:** five stocks in the first half of 2024, with 30 matched stock-months. The recorded correlation is 0.0304 and RMSE is 37.983 bps; this weak result is retained.
+- **Intraday extension:** 44 of 45 candidate intervals passed the documented quality gates.
+
+These figures describe repository evidence and were not recomputed during this README review.
+
+## Reproduce
+
+Use R 4.2.3 with the root `renv.lock` to restore the simulation environment, then run `Rscript run_simulation.R`. The script checks key package versions and includes estimator self-checks.
+
+For the Python pipeline and tests:
+
+```sh
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-lock.txt
+python -m unittest discover -s tests -v
+```
+
+Simulation can run from the public repository. Empirical reproduction requires authorized WRDS inputs; raw licensed data and individual empirical outputs must remain private.
+
+See [report](REPORT.md), [results](RESULTS.md), [methodology](docs/methodology.md), and [empirical reproduction](docs/reproduce_empirical.md). Retain the existing detailed Chinese README below this introduction.
+
+---
+
 # EDGE 项目：模拟复现、真实数据验证与日内扩展
 
 模拟复现：2026-10-14；真实数据分析：2026-10-15。对象为 Ardia, Guidotti & Kroencke (2024), *Efficient Estimation of Bid-Ask Spreads from Open, High, Low, and Close Prices*, Journal of Financial Economics 161, 103916。
