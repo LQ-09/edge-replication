@@ -26,7 +26,7 @@ python -m unittest discover -s tests -v
 
 Simulation can run from the public repository. Empirical reproduction requires authorized WRDS inputs; raw licensed data and individual empirical outputs must remain private.
 
-See [report](REPORT.md), [results](RESULTS.md), [methodology](docs/methodology.md), and [empirical reproduction](docs/reproduce_empirical.md). Retain the existing detailed Chinese README below this introduction.
+See [report](REPORT.md), [results](RESULTS.md), [methodology](docs/methodology.md), and [empirical reproduction](docs/reproduce_empirical.md). The detailed Chinese documentation follows below.
 
 ---
 
